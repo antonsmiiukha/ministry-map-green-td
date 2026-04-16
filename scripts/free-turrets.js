@@ -2,9 +2,8 @@
 // Автоматично перезаряджає турелі кожну секунду.
 
 Events.on(WorldLoadEvent, function(){
-    if(!isGreenTDMap()) return;
+    print("Green TD: налаштовую турелі...");
 
-    // Прибрати електрику з усіх турелей
     var allTurrets = [
         Blocks.duo, Blocks.scatter, Blocks.scorch, Blocks.hail,
         Blocks.arc, Blocks.wave, Blocks.lancer, Blocks.swarmer,
@@ -19,12 +18,8 @@ Events.on(WorldLoadEvent, function(){
         turret.consPower = null;
     }
 
-    // Автоподача патронів кожну секунду
     Timer.schedule(function(){
-        if(!isGreenTDMap()) return;
-
         Groups.build.each(function(b){
-            // ItemTurret — подати перший тип амуніції
             if(b.block instanceof ItemTurret && b.totalAmmo < b.block.maxAmmo){
                 var keys = b.block.ammoTypes.keys();
                 if(keys.hasNext()){
@@ -32,7 +27,6 @@ Events.on(WorldLoadEvent, function(){
                 }
             }
 
-            // LiquidTurret — заповнити рідиною
             if(b.block instanceof LiquidTurret && b.liquids != null){
                 var keys = b.block.ammoTypes.keys();
                 if(keys.hasNext()){

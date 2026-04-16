@@ -26,7 +26,6 @@ var itemMap = {
 };
 
 Events.on(UnitDestroyEvent, function(e){
-    if(!isGreenTDMap()) return;
     if(e.unit == null || e.unit.type == null) return;
     if(e.unit.team == Vars.state.rules.defaultTeam) return;
 

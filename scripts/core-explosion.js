@@ -1,7 +1,6 @@
 // При знищенні ядра жовтої команди — підрив усіх інших ядер на карті.
 
 Events.on(BlockDestroyEvent, function(e){
-    if(!isGreenTDMap()) return;
     if(e.tile == null || e.tile.build == null) return;
 
     var build = e.tile.build;
