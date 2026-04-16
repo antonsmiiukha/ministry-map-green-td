@@ -20,6 +20,8 @@ Events.on(WorldLoadEvent, function(){
 
     Timer.schedule(function(){
         Groups.build.each(function(b){
+            if(b == null || b.block == null) return;
+
             if(b.block instanceof ItemTurret && b.totalAmmo < b.block.maxAmmo){
                 var keys = b.block.ammoTypes.keys();
                 if(keys.hasNext()){
