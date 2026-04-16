@@ -15,24 +15,26 @@ Events.on(WorldLoadEvent, function(){
                 if(b == null || b.block == null) return;
                 if(b.block.ammoTypes == null || b.block.ammoTypes.size == 0) return;
 
-                // ItemTurret — подати предмет
-                if(b.items != null && b.totalAmmo < b.block.maxAmmo){
-                    var fed = false;
-                    b.block.ammoTypes.each(function(k, v){
-                        if(!fed){
-                            b.handleItem(b, k);
-                            fed = true;
-                        }
-                    });
+                // Знайти перший ключ
+                var firstKey = null;
+                var isLiquid = false;
+                b.block.ammoTypes.each(function(k, v){
+                    if(firstKey == null){
+                        firstKey = k;
+                        isLiquid = k instanceof Liquid;
+                    }
+                });
+
+                if(firstKey == null) return;
+
+                // Рідина
+                if(isLiquid && b.liquids != null){
+                    b.liquids.add(firstKey, b.block.liquidCapacity);
                 }
 
-                // LiquidTurret — долити рідину
-                if(b.liquids != null){
-                    b.block.ammoTypes.each(function(k, v){
-                        if(k instanceof Liquid){
-                            b.liquids.add(k, b.block.liquidCapacity);
-                        }
-                    });
+                // Предмет
+                if(!isLiquid && b.items != null){
+                    b.handleItem(b, firstKey);
                 }
             });
         } catch(e) {

@@ -7,7 +7,8 @@ var scriptNames = [
     "map-check",
     "rewards",
     "free-turrets",
-    "core-explosion"
+    "core-explosion",
+    "turret-heat"
 ];
 
 var combined = "";
