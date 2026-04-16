@@ -24,12 +24,13 @@ Events.on(WorldLoadEvent, function(){
             Groups.build.each(function(b){
                 if(b == null || b.block == null) return;
                 if(b.block.ammoTypes == null || b.block.ammoTypes.size == 0) return;
+                if(b.reloadCounter == null) return;
 
                 var id = b.id;
                 if(heatMap[id] == null) heatMap[id] = 0;
 
                 // Нагрів / охолодження
-                if(b.wasShooting){
+                if(b.shooting){
                     heatMap[id] = Math.min(MAX_HEAT, heatMap[id] + HEAT_GAIN * TICK_INTERVAL);
                 } else {
                     heatMap[id] = Math.max(0, heatMap[id] - COOL_RATE * TICK_INTERVAL);
@@ -39,7 +40,7 @@ Events.on(WorldLoadEvent, function(){
                 if(heatMap[id] > 0){
                     var heatRatio = heatMap[id] / MAX_HEAT;
                     var penalty = heatRatio * MAX_SLOWDOWN * TICK_INTERVAL * 60;
-                    b.reload = Math.max(0, b.reload - penalty);
+                    b.reloadCounter = Math.max(0, b.reloadCounter - penalty);
                 }
             });
         } catch(e) {
