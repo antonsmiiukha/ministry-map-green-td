@@ -1,27 +1,39 @@
 // Автоматично наповнює турелі патронами/рідиною кожну секунду.
 
+var turretTimer = null;
+
 Events.on(WorldLoadEvent, function(){
+    // Скасувати попередній таймер якщо є
+    if(turretTimer != null){
+        turretTimer.cancel();
+    }
+
     print("Green TD: запуск автоподачі патронів");
 
-    Timer.schedule(function(){
-        Groups.build.each(function(b){
-            if(b == null || b.block == null) return;
+    turretTimer = Timer.schedule(function(){
+        try {
+            Groups.build.each(function(b){
+                if(b == null || b.block == null) return;
 
-            // ItemTurret — подати предмет
-            if(b.block instanceof ItemTurret && b.totalAmmo < b.block.maxAmmo){
-                var keys = b.block.ammoTypes.keys();
-                if(keys.hasNext()){
-                    b.handleItem(b, keys.next());
-                }
-            }
+                // Перевіряємо наявність ammoTypes (ItemTurret або LiquidTurret)
+                if(b.block.ammoTypes != null && b.block.ammoTypes.size > 0){
+                    var keys = b.block.ammoTypes.keys();
+                    if(!keys.hasNext()) return;
+                    var firstKey = keys.next();
 
-            // LiquidTurret — долити рідину
-            if(b.block instanceof LiquidTurret && b.liquids != null){
-                var keys = b.block.ammoTypes.keys();
-                if(keys.hasNext()){
-                    b.liquids.add(keys.next(), b.block.liquidCapacity);
+                    // Предмети
+                    if(b.items != null && b.totalAmmo != null && b.totalAmmo < b.block.maxAmmo){
+                        b.handleItem(b, firstKey);
+                    }
+
+                    // Рідини
+                    if(b.liquids != null && firstKey instanceof Liquid){
+                        b.liquids.add(firstKey, b.block.liquidCapacity);
+                    }
                 }
-            }
-        });
-    }, 0, 1, -1);
+            });
+        } catch(e) {
+            print("Green TD turret error: " + e);
+        }
+    }, 1, 1, -1);
 });
