@@ -1,15 +1,18 @@
 // Green TD — головний файл мода.
-// Підключає модулі в спільному scope.
+// Збирає всі модулі в один scope і виконує разом.
 
 var modRoot = Vars.mods.getMod("green-td").root.child("scripts");
 
-function loadScript(name){
-    var code = modRoot.child(name + ".js").readString();
-    eval(code);
-    print("Green TD: завантажено " + name);
-}
+var scriptNames = [
+    "map-check",
+    "rewards",
+    "free-turrets",
+    "core-explosion"
+];
 
-loadScript("map-check");
-loadScript("rewards");
-loadScript("free-turrets");
-loadScript("core-explosion");
+var combined = "";
+for(var i = 0; i < scriptNames.length; i++){
+    combined += modRoot.child(scriptNames[i] + ".js").readString() + "\n";
+    print("Green TD: завантажено " + scriptNames[i]);
+}
+eval(combined);
