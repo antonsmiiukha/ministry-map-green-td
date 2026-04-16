@@ -1,7 +1,7 @@
 var rewardTeams = [Team.green, Team.blue];
 
 function getReward(type){
-    if(type == UnitTypes.dagger)   return { copper: 1 };
+    if(type == UnitTypes.dagger)   return { copper: 2 };
     if(type == UnitTypes.mace)     return { copper: 2, lead: 1 };
     if(type == UnitTypes.fortress) return { copper: 3, lead: 1 };
     if(type == UnitTypes.scepter)  return { copper: 3, lead: 2, plastanium: 1 };
