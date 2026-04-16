@@ -2,6 +2,6 @@ name: green-td
 displayName: "Green TD"
 author: "antonsmiiukha"
 description: "Tower Defense мод з нагородами командам за знищення ворожих юнітів. Мапа Green TD v0_65."
-version: "1.5"
+version: "1.6"
 minGameVersion: "149"
 hidden: false
