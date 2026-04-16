@@ -20,21 +20,23 @@ jobs:
       - name: Read mod version
         id: meta
         run: |
-          version=$(grep -E '^version:' mod.hjson | sed -E 's/^version:[[:space:]]*"?([^"]+)"?[[:space:]]*$/\1/')
+          version=$(grep -oP '"version"\s*:\s*"\K[^"]+' mod.json)
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "artifact=green-td-v${version}" >> "$GITHUB_OUTPUT"
-
-      - name: Package mod
-        run: |
-          zip -r "${{ steps.meta.outputs.artifact }}.zip" mod.hjson scripts maps -x "*.DS_Store"
-          unzip -l "${{ steps.meta.outputs.artifact }}.zip"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.meta.outputs.artifact }}
-          path: ${{ steps.meta.outputs.artifact }}.zip
-          if-no-files-found: error
+          path: |
+            mod.json
+            scripts/
+            maps/
+
+      - name: Package mod for release
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          zip -r "${{ steps.meta.outputs.artifact }}.zip" mod.json scripts maps -x "*.DS_Store"
 
       - name: Create GitHub release
         if: startsWith(github.ref, 'refs/tags/v')
