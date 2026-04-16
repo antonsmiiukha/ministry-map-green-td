@@ -3,7 +3,6 @@
 var turretTimer = null;
 
 Events.on(WorldLoadEvent, function(){
-    // Скасувати попередній таймер якщо є
     if(turretTimer != null){
         turretTimer.cancel();
     }
@@ -14,22 +13,26 @@ Events.on(WorldLoadEvent, function(){
         try {
             Groups.build.each(function(b){
                 if(b == null || b.block == null) return;
+                if(b.block.ammoTypes == null || b.block.ammoTypes.size == 0) return;
 
-                // Перевіряємо наявність ammoTypes (ItemTurret або LiquidTurret)
-                if(b.block.ammoTypes != null && b.block.ammoTypes.size > 0){
-                    var keys = b.block.ammoTypes.keys();
-                    if(!keys.hasNext()) return;
-                    var firstKey = keys.next();
+                // ItemTurret — подати предмет
+                if(b.items != null && b.totalAmmo < b.block.maxAmmo){
+                    var fed = false;
+                    b.block.ammoTypes.each(function(k, v){
+                        if(!fed){
+                            b.handleItem(b, k);
+                            fed = true;
+                        }
+                    });
+                }
 
-                    // Предмети
-                    if(b.items != null && b.totalAmmo != null && b.totalAmmo < b.block.maxAmmo){
-                        b.handleItem(b, firstKey);
-                    }
-
-                    // Рідини
-                    if(b.liquids != null && firstKey instanceof Liquid){
-                        b.liquids.add(firstKey, b.block.liquidCapacity);
-                    }
+                // LiquidTurret — долити рідину
+                if(b.liquids != null){
+                    b.block.ammoTypes.each(function(k, v){
+                        if(k instanceof Liquid){
+                            b.liquids.add(k, b.block.liquidCapacity);
+                        }
+                    });
                 }
             });
         } catch(e) {
