@@ -123,8 +123,11 @@ var lastAmmo = {};
 Events.run(Trigger.update, function(){
     Groups.build.each(function(b){
         if(b == null || b.block == null) return;
-        if(b.block.ammoTypes == null || b.block.ammoTypes.size == 0) return;
         if(b.reloadCounter == null) return;
+
+        var hasAmmo = b.block.ammoTypes != null && b.block.ammoTypes.size > 0;
+        var isPowerTurret = b.block.hasPower && HEAT_GAIN_MAP[b.block.id] != null;
+        if(!hasAmmo && !isPowerTurret) return;
 
         var id = b.id;
         if(heatMap[id] == null) heatMap[id] = 0;
@@ -140,13 +143,18 @@ Events.run(Trigger.update, function(){
         // Охолодження — завжди
         heatMap[id] = Math.max(0, heatMap[id] - COOL_RATE / coolFactor);
 
-        // Нагрів — тільки при реальному пострілі
-        var prevAmmo = lastAmmo[id] || 0;
-        var currAmmo = b.totalAmmo || 0;
-        lastAmmo[id] = currAmmo;
-
-        if(currAmmo < prevAmmo){
-            var heatGain = HEAT_GAIN_MAP[b.block.id] || HEAT_GAIN_DEFAULT;
+        if(hasAmmo){
+            // ItemTurret/LiquidTurret — нагрів по витраті патронів
+            var prevAmmo = lastAmmo[id] || 0;
+            var currAmmo = b.totalAmmo || 0;
+            lastAmmo[id] = currAmmo;
+            if(currAmmo < prevAmmo){
+                var heatGain = HEAT_GAIN_MAP[b.block.id] || HEAT_GAIN_DEFAULT;
+                heatMap[id] = Math.min(MAX_HEAT, heatMap[id] + heatGain * coolFactor);
+            }
+        } else if(isPowerTurret && b.shooting){
+            // PowerTurret — нагрів кожен кадр поки стріляє
+            var heatGain = (HEAT_GAIN_MAP[b.block.id] || HEAT_GAIN_DEFAULT) * 0.017;
             heatMap[id] = Math.min(MAX_HEAT, heatMap[id] + heatGain * coolFactor);
         }
 
@@ -159,11 +167,26 @@ Events.run(Trigger.update, function(){
     });
 });
 
-// Бар нагріву
+// =============================================
+// Подача електрики для PowerTurrets
+// =============================================
+
+Events.run(Trigger.update, function(){
+    Groups.build.each(function(b){
+        if(b == null || b.block == null) return;
+        if(!b.block.hasPower) return;
+        try { b.power.status = 1.0; } catch(e) {}
+    });
+});
+
+// Бар нагріву — для всіх турелей (ammo + power)
 var blocks = Vars.content.blocks();
 for(var bi = 0; bi < blocks.size; bi++){
     var block = blocks.get(bi);
-    if(block == null || block.ammoTypes == null || block.ammoTypes.size == 0) continue;
+    if(block == null) continue;
+    var hasAmmoBar = block.ammoTypes != null && block.ammoTypes.size > 0;
+    var isPowerBar = block.hasPower && HEAT_GAIN_MAP[block.id] != null;
+    if(!hasAmmoBar && !isPowerBar) continue;
     block.addBar("heat", function(e){
         return new Bar("Heat", Color.red, function(){
             return (heatMap[e.id] || 0) / MAX_HEAT;
