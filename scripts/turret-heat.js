@@ -5,18 +5,6 @@
 var heatMap = {};
 var lastAmmo = {};
 
-// Визначити coolFactor на основі рідин
-function getCoolFactor(b){
-    var factor = 1.0;
-    try {
-        if(b.liquids != null){
-            if(b.liquids.get(Liquids.cryofluid) > 0.1) factor = LIQUID_COOLING["cryofluid"];
-            else if(b.liquids.get(Liquids.water) > 0.1) factor = LIQUID_COOLING["water"];
-        }
-    } catch(e) {}
-    return factor;
-}
-
 Events.run(Trigger.update, function(){
     Groups.build.each(function(b){
         if(b == null || b.block == null) return;
@@ -26,12 +14,16 @@ Events.run(Trigger.update, function(){
         var id = b.id;
         if(heatMap[id] == null) heatMap[id] = 0;
 
-        var coolFactor = getCoolFactor(b);
+        var coolFactor = 1.0;
+        try {
+            if(b.liquids != null){
+                if(b.liquids.get(Liquids.cryofluid) > 0.1) coolFactor = LIQUID_COOLING["cryofluid"];
+                else if(b.liquids.get(Liquids.water) > 0.1) coolFactor = LIQUID_COOLING["water"];
+            }
+        } catch(e) {}
 
-        // Охолодження — завжди
         heatMap[id] = Math.max(0, heatMap[id] - COOL_RATE / coolFactor);
 
-        // Нагрів — тільки при реальному пострілі (totalAmmo зменшився)
         var prevAmmo = lastAmmo[id] || 0;
         var currAmmo = b.totalAmmo || 0;
         lastAmmo[id] = currAmmo;
@@ -40,7 +32,6 @@ Events.run(Trigger.update, function(){
             heatMap[id] = Math.min(MAX_HEAT, heatMap[id] + HEAT_GAIN * coolFactor);
         }
 
-        // Сповільнення перезарядки (квадратична крива)
         if(heatMap[id] > 0){
             var ratio = heatMap[id] / MAX_HEAT;
             var penalty = ratio * ratio * MAX_SLOWDOWN;
@@ -49,12 +40,14 @@ Events.run(Trigger.update, function(){
     });
 });
 
-// Бар нагріву на кожній турелі
-Vars.content.blocks().each(function(block){
-    if(block == null || block.ammoTypes == null || block.ammoTypes.size == 0) return;
+// Бар нагріву
+var blocks = Vars.content.blocks();
+for(var bi = 0; bi < blocks.size; bi++){
+    var block = blocks.get(bi);
+    if(block == null || block.ammoTypes == null || block.ammoTypes.size == 0) continue;
     block.addBar("heat", function(e){
         return new Bar("Heat", Color.red, function(){
             return (heatMap[e.id] || 0) / MAX_HEAT;
         });
     });
-});
+}

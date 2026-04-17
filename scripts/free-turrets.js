@@ -9,24 +9,30 @@ Events.on(WorldLoadEvent, function(){
         turretTimer.cancel();
     }
 
-    // Побудувати словник амуніції + дозволити рідину
     turretAmmoMap = {};
-    Vars.content.blocks().each(function(block){
-        if(block == null || block.ammoTypes == null || block.ammoTypes.size == 0) return;
+    var blocks = Vars.content.blocks();
+    for(var bi = 0; bi < blocks.size; bi++){
+        var block = blocks.get(bi);
+        if(block == null || block.ammoTypes == null || block.ammoTypes.size == 0) continue;
+        var foundKey = null;
+        var foundLiquid = false;
         block.ammoTypes.each(function(k, v){
-            if(turretAmmoMap[block.id] == null){
-                turretAmmoMap[block.id] = {key: k, liquid: k instanceof Liquid};
+            if(foundKey == null){
+                foundKey = k;
+                foundLiquid = k instanceof Liquid;
             }
         });
+        if(foundKey != null){
+            turretAmmoMap[block.id] = {key: foundKey, liquid: foundLiquid};
+        }
         if(!block.hasLiquids){
             block.hasLiquids = true;
             block.liquidCapacity = Math.max(block.liquidCapacity, TURRET_LIQUID_CAPACITY);
         }
-    });
+    }
 
     print("Green TD: знайдено типів турелей: " + Object.keys(turretAmmoMap).length);
 
-    // Подача патронів
     turretTimer = Timer.schedule(function(){
         Groups.build.each(function(b){
             if(b == null || b.block == null) return;
