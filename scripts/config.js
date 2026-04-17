@@ -24,19 +24,19 @@ var MAX_SLOWDOWN = 0.8;           // макс штраф до перезаряд
 // Базова лінія: spectre (~15 пострілів/сек) = 3
 var HEAT_GAIN_MAP = {};
 HEAT_GAIN_MAP[Blocks.spectre.id]     = 4;    // ~15/сек, базова лінія
-HEAT_GAIN_MAP[Blocks.duo.id]         = 16;    // ~3/сек, слабка
-HEAT_GAIN_MAP[Blocks.scorch.id]      = 2;    // ~10/сек, вогнемет
+HEAT_GAIN_MAP[Blocks.duo.id]         = 8;    // ~3/сек, слабка
+HEAT_GAIN_MAP[Blocks.scorch.id]      = 4;    // ~10/сек, вогнемет
 HEAT_GAIN_MAP[Blocks.scatter.id]     = 4;    // ~3/сек
 HEAT_GAIN_MAP[Blocks.salvo.id]       = 4;    // ~6/сек (4 стволи)
 HEAT_GAIN_MAP[Blocks.wave.id]        = 4;    // ~3/сек
 HEAT_GAIN_MAP[Blocks.arc.id]         = 5;    // ~1.5/сек
 HEAT_GAIN_MAP[Blocks.cyclone.id]     = 5;    // ~2/сек
 HEAT_GAIN_MAP[Blocks.meltdown.id]    = 5;    // безперервний лазер
-HEAT_GAIN_MAP[Blocks.swarmer.id]     = 6;    // ~1.5/сек
-HEAT_GAIN_MAP[Blocks.hail.id]        = 16;    // ~0.75/сек
+HEAT_GAIN_MAP[Blocks.swarmer.id]     = 4;    // ~1.5/сек
+HEAT_GAIN_MAP[Blocks.hail.id]        = 33;    // ~0.75/сек
 HEAT_GAIN_MAP[Blocks.fuse.id]        = 16;    // ~1.5/сек, потужна
 HEAT_GAIN_MAP[Blocks.lancer.id]      = 8;    // ~0.75/сек
-HEAT_GAIN_MAP[Blocks.ripple.id]      = 32    // ~0.85/сек
+HEAT_GAIN_MAP[Blocks.ripple.id]      = 33    // ~0.85/сек
 HEAT_GAIN_MAP[Blocks.foreshadow.id]  = 15;   // ~0.5/сек, один потужний постріл
 
 // --- Нагороди за юнітів ---
