@@ -6,6 +6,37 @@ eval(modRoot.child("config.js").readString());
 print("Green TD: конфіг завантажено");
 
 // =============================================
+// Усі юніти використовують зброю crawler (самопідрив)
+// =============================================
+
+function applyCrawlerSelfDestructLoadout(){
+    var crawlerWeapons = [];
+    for(var wi = 0; wi < UnitTypes.crawler.weapons.size; wi++){
+        crawlerWeapons.push(UnitTypes.crawler.weapons.get(wi));
+    }
+
+    var units = Vars.content.units();
+    var changed = 0;
+    for(var i = 0; i < units.size; i++){
+        var type = units.get(i);
+        if(type == null || type.weapons == null) continue;
+
+        type.weapons.clear();
+        for(var cwi = 0; cwi < crawlerWeapons.length; cwi++){
+            type.weapons.add(crawlerWeapons[cwi]);
+        }
+        changed++;
+    }
+
+    print("Green TD: зброю всіх юнітів замінено на crawler (" + changed + " типів)");
+}
+
+applyCrawlerSelfDestructLoadout();
+Events.on(WorldLoadEvent, function(){
+    applyCrawlerSelfDestructLoadout();
+});
+
+// =============================================
 // Нагороди за знищення ворожих юнітів
 // =============================================
 
