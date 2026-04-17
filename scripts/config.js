@@ -23,40 +23,40 @@ var MAX_SLOWDOWN = 0.8;           // макс штраф до перезаряд
 // швидкі турелі = мало за постріл (але часто), повільні = багато за постріл
 // Базова лінія: spectre (~15 пострілів/сек) = 3
 var HEAT_GAIN_MAP = {};
-HEAT_GAIN_MAP[Blocks.spectre.id]     = 4;    // ~15/сек, базова лінія
-HEAT_GAIN_MAP[Blocks.duo.id]         = 8;    // ~3/сек, слабка
-HEAT_GAIN_MAP[Blocks.scorch.id]      = 4;    // ~10/сек, вогнемет
-HEAT_GAIN_MAP[Blocks.scatter.id]     = 4;    // ~3/сек
-HEAT_GAIN_MAP[Blocks.salvo.id]       = 4;    // ~6/сек (4 стволи)
-HEAT_GAIN_MAP[Blocks.wave.id]        = 4;    // ~3/сек
-HEAT_GAIN_MAP[Blocks.arc.id]         = 5;    // ~1.5/сек
-HEAT_GAIN_MAP[Blocks.cyclone.id]     = 5;    // ~2/сек
-HEAT_GAIN_MAP[Blocks.meltdown.id]    = 5;    // безперервний лазер
-HEAT_GAIN_MAP[Blocks.swarmer.id]     = 4;    // ~1.5/сек
-HEAT_GAIN_MAP[Blocks.hail.id]        = 33;    // ~0.75/сек
-HEAT_GAIN_MAP[Blocks.fuse.id]        = 16;    // ~1.5/сек, потужна
-HEAT_GAIN_MAP[Blocks.lancer.id]      = 8;    // ~0.75/сек
-HEAT_GAIN_MAP[Blocks.ripple.id]      = 33    // ~0.85/сек
-HEAT_GAIN_MAP[Blocks.foreshadow.id]  = 15;   // ~0.5/сек, один потужний постріл
+HEAT_GAIN_MAP[Blocks.spectre.id] = 4;
+HEAT_GAIN_MAP[Blocks.duo.id] = 6;
+HEAT_GAIN_MAP[Blocks.scorch.id] = 4;
+HEAT_GAIN_MAP[Blocks.scatter.id] = 4;
+HEAT_GAIN_MAP[Blocks.salvo.id] = 4;
+HEAT_GAIN_MAP[Blocks.wave.id] = 4;
+HEAT_GAIN_MAP[Blocks.arc.id] = 5;
+HEAT_GAIN_MAP[Blocks.cyclone.id] = 5;
+HEAT_GAIN_MAP[Blocks.meltdown.id] = 100;
+HEAT_GAIN_MAP[Blocks.swarmer.id] = 4;
+HEAT_GAIN_MAP[Blocks.hail.id] = 33;
+HEAT_GAIN_MAP[Blocks.fuse.id] = 16;
+HEAT_GAIN_MAP[Blocks.lancer.id] = 8;
+HEAT_GAIN_MAP[Blocks.ripple.id] = 50
+HEAT_GAIN_MAP[Blocks.foreshadow.id] = 50;
 
 // --- Нагороди за юнітів ---
 var UNIT_REWARDS = {};
-UNIT_REWARDS[UnitTypes.dagger.id]   = { copper: 1 };
-UNIT_REWARDS[UnitTypes.mace.id]     = { copper: 2, lead: 1 };
-UNIT_REWARDS[UnitTypes.fortress.id] = { copper: 3, lead: 1 };
-UNIT_REWARDS[UnitTypes.scepter.id]  = { copper: 3, lead: 2, plastanium: 1 };
-UNIT_REWARDS[UnitTypes.reign.id]    = { copper: 4, lead: 3, plastanium: 2, surgeAlloy: 1 };
+UNIT_REWARDS[UnitTypes.dagger.id] = {copper: 1};
+UNIT_REWARDS[UnitTypes.mace.id] = {copper: 2, lead: 1};
+UNIT_REWARDS[UnitTypes.fortress.id] = {copper: 3, lead: 1};
+UNIT_REWARDS[UnitTypes.scepter.id] = {copper: 3, lead: 2, plastanium: 1};
+UNIT_REWARDS[UnitTypes.reign.id] = {copper: 4, lead: 3, plastanium: 2, surgeAlloy: 1};
 
-UNIT_REWARDS[UnitTypes.nova.id]     = { copper: 1 };
-UNIT_REWARDS[UnitTypes.pulsar.id]   = { copper: 2, lead: 1 };
-UNIT_REWARDS[UnitTypes.quasar.id]   = { copper: 3, lead: 1 };
-UNIT_REWARDS[UnitTypes.vela.id]     = { copper: 3, lead: 2, plastanium: 1 };
-UNIT_REWARDS[UnitTypes.corvus.id]   = { copper: 4, lead: 3, plastanium: 2, surgeAlloy: 1 };
+UNIT_REWARDS[UnitTypes.nova.id] = {copper: 1};
+UNIT_REWARDS[UnitTypes.pulsar.id] = {copper: 2, lead: 1};
+UNIT_REWARDS[UnitTypes.quasar.id] = {copper: 3, lead: 1};
+UNIT_REWARDS[UnitTypes.vela.id] = {copper: 3, lead: 2, plastanium: 1};
+UNIT_REWARDS[UnitTypes.corvus.id] = {copper: 4, lead: 3, plastanium: 2, surgeAlloy: 1};
 
 // Маппінг імен ресурсів на Items
 var ITEM_MAP = {
-    copper:     Items.copper,
-    lead:       Items.lead,
+    copper: Items.copper,
+    lead: Items.lead,
     plastanium: Items.plastanium,
     surgeAlloy: Items.surgeAlloy
 };
