@@ -19,23 +19,25 @@ var COOL_RATE = 0.1;              // охолодження за кадр (за�
 var MAX_SLOWDOWN = 0.8;           // макс штраф до перезарядки (квадратична крива)
 
 // Нагрів за постріл для кожної турелі
-// Більше значення = швидше перегрів
+// Обернено пропорційно швидкострільності:
+// швидкі турелі = мало за постріл (але часто), повільні = багато за постріл
+// Базова лінія: spectre (~15 пострілів/сек) = 3
 var HEAT_GAIN_MAP = {};
-HEAT_GAIN_MAP[Blocks.duo.id]         = 1;    // слабка, майже не гріється
-HEAT_GAIN_MAP[Blocks.scatter.id]     = 1.5;
-HEAT_GAIN_MAP[Blocks.scorch.id]      = 1;
-HEAT_GAIN_MAP[Blocks.hail.id]        = 1.5;
-HEAT_GAIN_MAP[Blocks.arc.id]         = 1;
-HEAT_GAIN_MAP[Blocks.wave.id]        = 1;
-HEAT_GAIN_MAP[Blocks.lancer.id]      = 2;
-HEAT_GAIN_MAP[Blocks.swarmer.id]     = 2;
-HEAT_GAIN_MAP[Blocks.salvo.id]       = 2;
-HEAT_GAIN_MAP[Blocks.fuse.id]        = 3;    // потужна, гріється швидше
-HEAT_GAIN_MAP[Blocks.ripple.id]      = 2.5;
-HEAT_GAIN_MAP[Blocks.cyclone.id]     = 2.5;
-HEAT_GAIN_MAP[Blocks.foreshadow.id]  = 4;    // дуже потужна
-HEAT_GAIN_MAP[Blocks.spectre.id]     = 3;    // швидкострільна
-HEAT_GAIN_MAP[Blocks.meltdown.id]    = 3.5;  // лазер
+HEAT_GAIN_MAP[Blocks.spectre.id]     = 3;    // ~15/сек, базова лінія
+HEAT_GAIN_MAP[Blocks.duo.id]         = 3;    // ~3/сек, слабка
+HEAT_GAIN_MAP[Blocks.scorch.id]      = 2;    // ~10/сек, вогнемет
+HEAT_GAIN_MAP[Blocks.scatter.id]     = 4;    // ~3/сек
+HEAT_GAIN_MAP[Blocks.salvo.id]       = 4;    // ~6/сек (4 стволи)
+HEAT_GAIN_MAP[Blocks.wave.id]        = 4;    // ~3/сек
+HEAT_GAIN_MAP[Blocks.arc.id]         = 5;    // ~1.5/сек
+HEAT_GAIN_MAP[Blocks.cyclone.id]     = 5;    // ~2/сек
+HEAT_GAIN_MAP[Blocks.meltdown.id]    = 5;    // безперервний лазер
+HEAT_GAIN_MAP[Blocks.swarmer.id]     = 6;    // ~1.5/сек
+HEAT_GAIN_MAP[Blocks.hail.id]        = 7;    // ~0.75/сек
+HEAT_GAIN_MAP[Blocks.fuse.id]        = 8;    // ~1.5/сек, потужна
+HEAT_GAIN_MAP[Blocks.lancer.id]      = 8;    // ~0.75/сек
+HEAT_GAIN_MAP[Blocks.ripple.id]      = 8;    // ~0.85/сек
+HEAT_GAIN_MAP[Blocks.foreshadow.id]  = 15;   // ~0.5/сек, один потужний постріл
 
 // --- Нагороди за юнітів ---
 var UNIT_REWARDS = {};
