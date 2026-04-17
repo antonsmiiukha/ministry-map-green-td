@@ -20,6 +20,8 @@ function applyCrawlerSelfDestructLoadout(){
     for(var i = 0; i < units.size; i++){
         var type = units.get(i);
         if(type == null || type.weapons == null) continue;
+        // Не змінюємо літаючі юніти, щоб зберегти "літачки" гравців
+        if(type.flying) continue;
 
         type.weapons.clear();
         for(var cwi = 0; cwi < crawlerWeapons.length; cwi++){
@@ -68,25 +70,61 @@ Events.on(UnitDestroyEvent, function(e){
 // Підрив ядер при знищенні ядра CORE_DESTROY_TEAM
 // =============================================
 
+var coreChainReactionActive = false;
+
 Events.on(BlockDestroyEvent, function(e){
-    if(e.tile == null || e.tile.build == null) return;
+    if(coreChainReactionActive) return;
+    if(e == null || e.tile == null) return;
 
-    var build = e.tile.build;
-    if(build.team != CORE_DESTROY_TEAM) return;
-    if(!(build.block instanceof CoreBlock)) return;
+    var tile = e.tile;
+    var destroyedTeam = null;
+    var wasCore = false;
 
-    print("Green TD: ядро " + CORE_DESTROY_TEAM.name + " знищено — підрив усіх ядер!");
+    try {
+        destroyedTeam = tile.team();
+        wasCore = tile.block() instanceof CoreBlock;
+    } catch(err){
+        return;
+    }
 
-    var cores = [];
+    if(!wasCore) return;
+    if(destroyedTeam == null || destroyedTeam != CORE_DESTROY_TEAM) return;
+
+    coreChainReactionActive = true;
+    print("Green TD: ядро " + destroyedTeam.name + " знищено — глобальний підрив турелей, юнітів і ядер!");
+
+    var buildingsToKill = [];
     Groups.build.each(function(b){
-        if(b.block instanceof CoreBlock && b != build){
-            cores.push(b);
-        }
+        if(b == null || b.block == null || b.team == null) return;
+        var isCore = b.block instanceof CoreBlock;
+        var isTurret = b.block instanceof Turret;
+        if(!isCore && !isTurret) return;
+        try {
+            if(b.isValid()) buildingsToKill.push(b);
+        } catch(err){}
     });
 
-    for(var i = 0; i < cores.length; i++){
-        cores[i].kill();
+    for(var i = 0; i < buildingsToKill.length; i++){
+        try {
+            buildingsToKill[i].kill();
+        } catch(err){}
     }
+
+    var unitsToKill = [];
+    Groups.unit.each(function(u){
+        if(u == null) return;
+        try {
+            if(u.isValid()) unitsToKill.push(u);
+        } catch(err){}
+    });
+
+    for(var ui = 0; ui < unitsToKill.length; ui++){
+        try {
+            unitsToKill[ui].kill();
+        } catch(err){}
+    }
+
+    coreChainReactionActive = false;
 });
 
 // =============================================
