@@ -1,42 +1,17 @@
 // Нагороди командам за знищення ворожих юнітів.
 
-var rewardTeams = [Team.green, Team.blue];
-
-function getReward(type){
-    if(type == UnitTypes.dagger)   return { copper: 1 };
-    if(type == UnitTypes.mace)     return { copper: 2, lead: 1 };
-    if(type == UnitTypes.fortress) return { copper: 3, lead: 1 };
-    if(type == UnitTypes.scepter)  return { copper: 3, lead: 2, plastanium: 1 };
-    if(type == UnitTypes.reign)    return { copper: 4, lead: 3, plastanium: 2, surgeAlloy: 1 };
-
-    if(type == UnitTypes.nova)     return { copper: 1 };
-    if(type == UnitTypes.pulsar)   return { copper: 2, lead: 1 };
-    if(type == UnitTypes.quasar)   return { copper: 3, lead: 1 };
-    if(type == UnitTypes.vela)     return { copper: 3, lead: 2, plastanium: 1 };
-    if(type == UnitTypes.corvus)   return { copper: 4, lead: 3, plastanium: 2, surgeAlloy: 1 };
-
-    return null;
-}
-
-var itemMap = {
-    copper:     Items.copper,
-    lead:       Items.lead,
-    plastanium: Items.plastanium,
-    surgeAlloy: Items.surgeAlloy
-};
-
 Events.on(UnitDestroyEvent, function(e){
     if(e.unit == null || e.unit.type == null) return;
     if(e.unit.team == Vars.state.rules.defaultTeam) return;
 
-    var reward = getReward(e.unit.type);
+    var reward = UNIT_REWARDS[e.unit.type.id];
     if(reward == null){
         print("Немає нагороди для: " + e.unit.type.name);
         return;
     }
 
-    for(var i = 0; i < rewardTeams.length; i++){
-        var team = rewardTeams[i];
+    for(var i = 0; i < REWARD_TEAMS.length; i++){
+        var team = REWARD_TEAMS[i];
         var data = Vars.state.teams.get(team);
         if(data == null) continue;
 
@@ -47,7 +22,7 @@ Events.on(UnitDestroyEvent, function(e){
         }
 
         for(var key in reward){
-            var item = itemMap[key];
+            var item = ITEM_MAP[key];
             if(item != null){
                 core.items.add(item, reward[key]);
                 print("+" + reward[key] + " " + key + " в " + team.name);

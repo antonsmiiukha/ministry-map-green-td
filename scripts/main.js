@@ -4,11 +4,12 @@
 var modRoot = Vars.mods.getMod("green-td").root.child("scripts");
 
 var scriptNames = [
+    "config",
     "map-check",
     "rewards",
     "free-turrets",
-    "core-explosion",
-    "turret-heat"
+    "turret-heat",
+    "core-explosion"
 ];
 
 var combined = "";
