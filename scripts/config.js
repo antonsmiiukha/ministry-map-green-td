@@ -14,9 +14,28 @@ var TURRET_LIQUID_CAPACITY = 10;  // мінімальна ємність рід�
 
 // --- Нагрів турелей ---
 var MAX_HEAT = 100;               // максимальний нагрів
-var HEAT_GAIN = 2;                // нагрів за кожен постріл
+var HEAT_GAIN_DEFAULT = 2;        // нагрів за постріл (для невказаних турелей)
 var COOL_RATE = 0.1;              // охолодження за кадр (завжди)
 var MAX_SLOWDOWN = 0.8;           // макс штраф до перезарядки (квадратична крива)
+
+// Нагрів за постріл для кожної турелі
+// Більше значення = швидше перегрів
+var HEAT_GAIN_MAP = {};
+HEAT_GAIN_MAP[Blocks.duo.id]         = 1;    // слабка, майже не гріється
+HEAT_GAIN_MAP[Blocks.scatter.id]     = 1.5;
+HEAT_GAIN_MAP[Blocks.scorch.id]      = 1;
+HEAT_GAIN_MAP[Blocks.hail.id]        = 1.5;
+HEAT_GAIN_MAP[Blocks.arc.id]         = 1;
+HEAT_GAIN_MAP[Blocks.wave.id]        = 1;
+HEAT_GAIN_MAP[Blocks.lancer.id]      = 2;
+HEAT_GAIN_MAP[Blocks.swarmer.id]     = 2;
+HEAT_GAIN_MAP[Blocks.salvo.id]       = 2;
+HEAT_GAIN_MAP[Blocks.fuse.id]        = 3;    // потужна, гріється швидше
+HEAT_GAIN_MAP[Blocks.ripple.id]      = 2.5;
+HEAT_GAIN_MAP[Blocks.cyclone.id]     = 2.5;
+HEAT_GAIN_MAP[Blocks.foreshadow.id]  = 4;    // дуже потужна
+HEAT_GAIN_MAP[Blocks.spectre.id]     = 3;    // швидкострільна
+HEAT_GAIN_MAP[Blocks.meltdown.id]    = 3.5;  // лазер
 
 // --- Нагороди за юнітів ---
 var UNIT_REWARDS = {};

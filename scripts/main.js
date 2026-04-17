@@ -146,7 +146,8 @@ Events.run(Trigger.update, function(){
         lastAmmo[id] = currAmmo;
 
         if(currAmmo < prevAmmo){
-            heatMap[id] = Math.min(MAX_HEAT, heatMap[id] + HEAT_GAIN * coolFactor);
+            var heatGain = HEAT_GAIN_MAP[b.block.id] || HEAT_GAIN_DEFAULT;
+            heatMap[id] = Math.min(MAX_HEAT, heatMap[id] + heatGain * coolFactor);
         }
 
         // Сповільнення перезарядки (квадратична крива)
